@@ -4,8 +4,22 @@ import NavBar from "./navbar";
 export default function Layout({ children }) {
   return (
     <div>
-      <NavBar />
-      {children}
+      <div id="middle">
+        <NavBar />
+        {children}
+      </div>
+
+      <style global jsx>
+        {`
+          #middle {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+          }
+        `}
+      </style>
     </div>
   );
 }

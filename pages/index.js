@@ -2,14 +2,13 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import Seo from "../components/Seo";
 
-const API_KEY = "b628b0f65cc8570a11e0e393168cfb49";
-const MOVIE_API = "https://api.themoviedb.org/3/movie";
 const Image_path = "https://image.tmdb.org/t/p/";
 
-export default function Home() {
+export default function Home({ data }) {
+  console.log(data);
   const [movies, setMovies] = useState([]);
   useEffect(() => {
-    fetch(`${MOVIE_API}/upcoming?api_key=${API_KEY}&language=en-US`)
+    fetch(`/movie/upcoming`)
       .then((res) => res.json())
       .then(({ results }) => setMovies(results));
     console.log(movies);
@@ -20,7 +19,7 @@ export default function Home() {
       <Seo title="HOME" />
       <h1>THIS IS HOME</h1>
       <div id="movie-container">
-        {movies.map((res) => (
+        {movies?.map((res) => (
           <div key={res.id} className={"movie"}>
             <Image
               src={`${Image_path}w400${res.poster_path}`}
@@ -52,4 +51,17 @@ export default function Home() {
       `}</style>
     </div>
   );
+}
+
+// Use getServerSideProps
+export async function getServerSideProps() {
+  // Fetch data from external API
+  const res = await fetch(
+    `https://api.themoviedb.org/3/movie/upcoming?api_key=b628b0f65cc8570a11e0e393168cfb49&language=en-US`
+  );
+  const data = await res.json();
+  console.log(data);
+
+  // Pass data to the page via props
+  return { props: { data } };
 }
